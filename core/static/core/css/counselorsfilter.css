@@ -1,0 +1,361 @@
+/* ============================================================
+   MindEase - Counselor Filter Page
+   Final Glass/Gradient + Optimized Spacing Version
+   Matches dashboard & booking layout rhythm
+   ============================================================ */
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;  /* Ensures padding/borders are included in width/height */
+  font-family: "Inter", sans-serif;  /* Sets default font */
+}
+
+/* Body Background */
+body {
+  background: radial-gradient(circle at top left, #dbefff 0%, #f4f7ff 100%);  /* Radial gradient background */
+  background-attachment: fixed;  /* Fixes background for parallax effect */
+  font-family: 'Inter', sans-serif;
+  color: #1e293b;  /* Default text color */
+  min-height: 100vh;  /* Ensures full viewport height */
+  overflow-x: hidden;  /* Prevents horizontal scrolling */
+}
+
+/* Navbar */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.25);  /* Semi-transparent background */
+  backdrop-filter: blur(20px);  /* Blurs background for glass effect */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);  /* Subtle border */
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.brand-logo {
+  font-weight: 700;
+  color: #2563eb;  /* Blue color */
+  font-size: 18px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;  /* Space between icon and text */
+}
+
+/* Page Wrapper */
+.page-container {
+  max-width: 1100px;  /* Limits max width */
+  margin: 0 auto;  /* Centers container */
+  padding: 50px 20px 100px;  /* Adds padding */
+}
+
+/* Back Link */
+.back-link {
+  display: inline-block;
+  color: #3b82f6;  /* Blue link color */
+  text-decoration: none;
+  margin-bottom: 16px;
+  font-weight: 500;
+  transition: 0.2s ease;  /* Smooth hover transition */
+}
+
+.back-link:hover {
+  text-decoration: underline;  /* Underlines on hover */
+}
+
+/* Page Header */
+.section-header {
+  margin-bottom: 36px;
+}
+
+.section-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;  /* Dark color for heading */
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  color: #64748b;  /* Gray color for subtitle */
+  font-size: 15px;
+}
+
+/* Glass Containers (shared base) */
+.glass-box {
+  background: rgba(255, 255, 255, 0.55);  /* Semi-transparent white */
+  backdrop-filter: blur(18px);  /* Glass blur effect */
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);  /* Subtle shadow */
+  border: 1px solid rgba(255, 255, 255, 0.3);  /* Thin border */
+  transition: all 0.3s ease;  /* Smooth transitions */
+}
+
+.glass-box:hover {
+  box-shadow: 0 12px 36px rgba(31, 38, 135, 0.12);  /* Deeper shadow on hover */
+}
+
+/* Filter Card */
+.filter-card {
+  padding: 28px;
+  margin-bottom: 44px;
+}
+
+.filter-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;  /* Dark gray */
+  margin-bottom: 18px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;  /* Three columns */
+  gap: 24px;  /* Space between fields */
+}
+
+.filter-field label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #475569;  /* Medium gray */
+  margin-bottom: 6px;
+  display: block;
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.4);  /* Light border */
+  background: rgba(255, 255, 255, 0.7);  /* Semi-transparent background */
+  font-size: 14px;
+  transition: 0.3s ease;  /* Smooth focus transition */
+}
+
+.filter-field input:focus,
+.filter-field select:focus {
+  outline: none;
+  border-color: #3b82f6;  /* Blue border on focus */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);  /* Blue glow */
+}
+
+/* Counselor List */
+.counselor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;  /* Space between cards */
+}
+
+/* Counselor Card */
+.counselor-card {
+  display: flex;
+  justify-content: space-between;  /* Spaces left and right sections */
+  align-items: flex-start;
+  padding: 28px;
+  position: relative;
+}
+
+.counselor-left {
+  display: flex;
+  gap: 20px;  /* Space between avatar and info */
+  align-items: flex-start;
+}
+
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;  /* Circular shape */
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);  /* Gradient background */
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;  /* Prevents shrinking */
+  box-shadow: 0 4px 12px rgba(96,165,250,0.3);  /* Shadow for depth */
+}
+
+/* Info Section */
+.info h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 3px;
+}
+
+.location {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.rating {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.rating span {
+  color: #94a3b8;  /* Lighter gray for reviews */
+}
+
+.bio {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 10px;
+  line-height: 1.55;  /* Improves readability */
+  max-width: 640px;  /* Limits width */
+}
+
+/* Tags */
+.tags {
+  display: flex;
+  flex-wrap: wrap;  /* Wraps to new lines */
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.tags span {
+  background: rgba(241, 245, 249, 0.85);  /* Light background */
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: #475569;
+  transition: 0.25s;  /* Smooth hover */
+}
+
+.tags span:hover {
+  background: linear-gradient(135deg, #8cc0ff, #b694ff);  /* Gradient on hover */
+  color: #fff;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #34d399, #3b82f6);  /* Green-blue gradient */
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);  /* Shifts gradient */
+  transform: translateY(-2px);  /* Lifts on hover */
+}
+
+.btn-outline {
+  border: 1px solid rgba(148, 163, 184, 0.5);  /* Light border */
+  background: rgba(255, 255, 255, 0.85);  /* Semi-transparent background */
+  color: #1e293b;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.btn-outline:hover {
+  border-color: #3b82f6;  /* Blue border on hover */
+  color: #2563eb;  /* Blue text */
+}
+
+/* Verified Badge */
+.verified {
+  background: linear-gradient(135deg, #a78bfa, #c4b5fd);  /* Purple gradient */
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  box-shadow: 0 2px 8px rgba(167, 139, 250, 0.4);  /* Shadow */
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .filter-grid {
+    grid-template-columns: 1fr 1fr;  /* Two columns on tablets */
+  }
+
+  .filter-card {
+    padding: 22px;  /* Reduced padding */
+  }
+
+  .counselor-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 650px) {
+  .filter-grid {
+    grid-template-columns: 1fr;  /* Single column on phones */
+  }
+
+  .counselor-card {
+    flex-direction: column;  /* Stacks vertically */
+  }
+
+  .verified {
+    position: relative;  /* Repositions badge */
+    margin-top: 12px;
+    right: 0;
+    align-self: flex-start;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;  /* Smaller avatar */
+  }
+
+  .page-container {
+    padding: 40px 16px 80px;  /* Adjusted padding */
+  }
+}
+
+.slot-tags {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.slot-tag {
+  background-color: #ffe0b2;
+  color: #ef6c00;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.slot-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.slot-day {
+  font-weight: bold;
+  background-color: #f0f0f0;
+  padding: 6px 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+}
+
+.slot-time {
+  padding-left: 20px;
+  margin: 4px 0;
+  font-size: 14px;
+}

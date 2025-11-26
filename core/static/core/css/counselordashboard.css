@@ -1,0 +1,253 @@
+/* Base Styles: Sets global font, background, and resets for the page */
+:root {
+  /* Custom properties for consistent theming */
+  --primary-color: #06b6d4;
+  --primary-hover: #0891b2;
+  --secondary-bg: #f9fafb;
+  --text-color: #1f2937;
+  --border-color: #e5e7eb;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  margin: 0;
+}
+
+/* Header Styles: Defines layout and appearance of the top navigation bar */
+.header {
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.username {
+  color: #374151;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.logout-btn:hover,
+.logout-btn:focus {
+  background-color: var(--primary-hover);
+  outline: 2px solid var(--primary-color); /* Accessibility: Visible focus ring */
+}
+
+/* Main Content Styles: Centers and pads the primary dashboard area */
+.main-content {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.welcome-section h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-section p {
+  color: #6b7280;
+}
+
+/* Layout Styles: Uses CSS Grid for responsive two-column dashboard */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Card Styles: Defines appearance for content containers (e.g., schedules, stats) */
+.card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Button Styles: Styles for various interactive buttons */
+.view-calendar-btn {
+  background-color: #ecfeff;
+  color: var(--primary-color);
+  border: 1px solid #a5f3fc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.view-calendar-btn:hover,
+.view-calendar-btn:focus {
+  background-color: #cffafe;
+  outline: 2px solid var(--primary-color); /* Accessibility: Visible focus ring */
+}
+
+/* Session Styles: Layout for individual session blocks in schedules */
+.session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--secondary-bg);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  margin-top: 0.8rem;
+}
+
+.avatar {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 600;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status.upcoming {
+  background-color: #a78bfa;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.join-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.join-btn:hover,
+.join-btn:focus {
+  background-color: var(--primary-hover);
+  outline: 2px solid var(--primary-color); /* Accessibility: Visible focus ring */
+}
+
+/* Progress Bar Styles: Defines layout and animation for weekly schedule bars */
+.week-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  flex: 1;
+  background-color: var(--border-color);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background-color: var(--primary-color);
+  height: 100%;
+  width: 0%;
+  transition: width 0.8s ease-in-out; /* Smooth animation tied to JS progress bar logic */
+}
+
+/* Sidebar Card Styles: Smaller cards for stats, actions, and feedback */
+.small-card {
+  padding: 1rem;
+}
+
+.stats li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+/* Quick Action Styles: Uniform styling for action links/buttons */
+.quick-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 50%;
+  text-align: left;
+  background-color: #f3f4f6;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.quick-action:hover,
+.quick-action:focus {
+  background-color: var(--border-color);
+  border-color: #d1d5db;
+  outline: 2px solid var(--primary-color); /* Accessibility: Visible focus ring */
+}
+
+.quick-action .icon {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Feedback Styles: Layout for client feedback quotes */
+.feedback {
+  background-color: #ecfdf5;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+
+.quote {
+  font-style: italic;
+  color: #065f46;
+}
+
+.client {
+  font-size: 0.85rem;
+  color: #047857;
+  margin-top: 4px;
+}
+
+/* Responsive Styles: Adjusts layout for smaller screens */
+@media (max-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* Single column on tablets/mobile */
+  }
+}

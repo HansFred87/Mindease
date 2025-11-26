@@ -1,0 +1,70 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/add_form.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_panel/css/admin.css' %}">
+{% endblock %}
+
+{% block title %}
+    {% if tip %}Edit{% else %}Add{% endif %} Wellness Tip | MindEase Administration
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block header %}
+<div class="custom-admin-navbar">
+    <div class="navbar-brand">
+        <a href="{% url 'custom_admin:index' %}">
+            <span class="admin-logo">MindEase Administration</span>
+        </a>
+    </div>
+    <div class="navbar-user">
+        {% if user.is_authenticated %}
+            <span class="welcome-msg">Welcome, <strong>{{ user.full_name.split.0|title }}!</strong></span>
+            <form method="post" action="{% url 'custom_admin:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block nav-sidebar %}
+    {% include 'admin_panel/admin_custom_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="custom-admin-add-user">
+    <div class="admin-form-container">
+        {% if messages %}
+            <div class="admin-messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save-btn">Save</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div id="footer" class="admin-footer">
+    <p>&copy; 2024 MindEase - Integrated Mental Health Support Platform. Empowering minds, transforming lives.</p>
+</div>
+{% if user.is_authenticated %}
+    {% include 'ai_companion/widget.html' %}
+{% endif %}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+{% endblock %}

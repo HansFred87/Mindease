@@ -1,0 +1,136 @@
+{% load static %}  <!-- Loads Django's static files template tag for CSS/JS paths -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Your Perfect Counselor | MindEase</title>
+  <link rel="stylesheet" href="{% static 'core/css/global.css' %}">  <!-- Links to global CSS for shared styles -->
+  <link rel="stylesheet" href="{% static 'core/css/counselorsfilter.css' %}">  <!-- Links to page-specific CSS for filters and cards -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+</head>
+<body>
+  <header class="navbar-glass">  <!-- Header with glassmorphism effect -->
+    <div class="nav-left">
+       <a href="{% url 'user_dashboard' %}" class="brand-logo"><img src="{% static 'accounts/images/logo.png' %}" alt="Logo" class="logo-image" style="width: 30px; height: 30px;"><span> MindEase</span></a> <!-- App logo with emoji -->
+    </div>
+  </header>
+
+  <main class="page-container">
+    <a href="{% url 'user_dashboard' %}" class="back-link">← Back to Dashboard</a>  <!-- Back navigation link -->
+
+    <section class="section-header">
+      <h1>Find Your Perfect Counselor</h1>
+      <p>Browse our network of verified mental health professionals</p>
+    </section>
+
+    <!-- FILTERS -->
+  <section class="filter-card glass-box">
+  <h3>Filter Counselors</h3>
+  <div class="filter-grid">
+    
+    <div class="filter-field">
+      <label>Search</label>
+      <input type="text" id="search" placeholder="🔍 Search by name..." onkeyup="filterCounselors()">
+    </div>
+
+    <div class="filter-field">
+      <label>Specialization</label>
+     <select id="specialization" onchange="filterCounselors()">
+    <option value="all">All Specializations</option>
+    <option value="anxiety">Anxiety</option>
+    <option value="depression">Depression</option>
+    <option value="stress-management">Stress Management</option>
+    <option value="trauma">Trauma</option>
+    <option value="ptsd">PTSD</option>
+    <option value="relationship-issues">Relationship Issues</option>
+    <option value="self-esteem">Self-Esteem</option>
+    <option value="anger-management">Anger Management</option>
+    <option value="mindfulness">Mindfulness</option>
+    <option value="financial-stress">Financial Stress</option>
+    <option value="academic-pressure">Academic Pressure</option>
+    <option value="parenting">Parenting</option>
+    <option value="other-mild-concerns">Other Mild Concerns</option>
+</select>
+
+    </div>
+
+  </div>
+</section>
+
+    <!-- COUNSELOR LIST -->
+    <section class="counselor-list" id="counselorList">
+      {% for counselor in counselors %}
+        <article class="counselor-card glass-box"
+                data-name="{{ counselor.full_name|lower }}"
+                data-specialization="{% for s in counselor.get_specializations_list %}{{ s|slugify }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                data-location="{{ counselor.get_institution_display|lower }}">
+          <div class="counselor-left">
+            <div class="avatar">{{ counselor.full_name|first }}</div>
+            <div class="info">
+              <h3>{{ counselor.full_name }}</h3>
+              <p class="location"> <i class="fa-solid fa-map"></i> {{ counselor.get_institution_display }}</p>
+              <p class="rating"><i class="fa-solid fa-bullhorn"></i> 4.9 <span>(127 reviews)</span></p> <!-- You can later add real ratings -->
+              <p class="bio">{{ counselor.get_bio_display }}</p>
+              <div class="specialization-tags">
+                {% for spec in counselor.get_specializations_list %}
+                  <span class="tag">{{ spec }}</span>
+                {% empty %}
+                  <p>No specializations listed</p>
+                {% endfor %}
+              </div> <br>
+
+              <style>
+              .specialization-tags {
+                margin-top: 6px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+              }
+              .tag {
+                background-color: #e0f7fa;
+                color: #00796b;
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 500;
+              }
+              </style>
+
+              <!--div class="availability">
+                <h4>Available Slots</h4>
+                <ul class="slot-list" id="slots-{{ counselor.id }}">
+                  <Slots will be populated by JS>
+                </ul>
+              </div-->
+
+              <div class="buttons">
+              <a href="javascript:void(0);" class="btn-primary book-btn" data-id="{{ counselor.id }}">
+                  <i class="fa-solid fa-calendar-days"></i> Book Session
+              </a>
+
+                <!--a href="#" class="btn-outline">
+                  <i class="fa-solid fa-calendar-days"></i> View Profile</a-->
+              </div>
+            </div>
+          </div>
+          <span class="verified">{{ counselor.get_verified_display }}</span>
+        </article>
+      {% empty %}
+        <p>No counselors found.</p>
+      {% endfor %}
+    </section>
+    
+  </main>
+
+ 
+  <!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Optional: jQuery if not already included -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="{% static 'core/js/counselorsfilter.js' %}"></script>  <!-- Loads JS for filtering functionality -->
+
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Patient Records — MindEase</title>
+  <link rel="stylesheet" href="{% static 'core/css/patient_records.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="me-header">
+    <a class="me-logo" href="{% url 'counselor_dashboard' %}" aria-label="Return to dashboard">🧠 MindEase</a>
+  </header>
+
+  <main class="me-main">
+    <div class="me-container">
+      <div class="me-back">
+        <a href="{% url 'counselor_dashboard' %}" class="me-back-link">← Back to Dashboard</a>
+      </div>
+
+      <section class="me-top">
+        <div class="me-top-left">
+          <h1 class="me-title">Patient Records</h1>
+          <p class="me-sub">View all past sessions and notes</p>
+        </div>
+
+        <div class="me-search-wrap">
+          <input id="sessionSearch" class="me-search-input" placeholder="Search sessions by patient name..." type="search" autocomplete="off" />
+        </div>
+      </section>
+
+      <ul id="sessionList" class="me-list">
+        {% for s in sessions %}
+        <li class="me-card" data-name="{{ s.patient.full_name }}">
+          <div class="me-card-left">
+            <div class="me-avatar">{{ s.patient.full_name|slice:":1" }}</div>
+            <div class="me-info">
+              <div class="me-name-row">
+                <h3 class="me-name">{{ s.patient.full_name }}</h3>
+                {% if s.status == "completed" %}
+                  <span class="me-pill pill-completed">Completed</span>
+                {% elif s.status == "started" %}
+                  <span class="me-pill pill-started">In Progress</span>
+                {% else %}
+                  <span class="me-pill pill-pending">Pending</span>
+                {% endif %}
+              </div>
+              <div class="me-meta">
+                <span class="meta-item">📅 Session: {{ s.date|date:"M d, Y" }}</span>
+                <span class="meta-dot">·</span>
+                <span class="meta-item">⏰ {{ s.time|time:"h:i A" }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="me-card-right">
+            <button class="btn btn-outline view-notes" data-notes="{{ s.counselor_notes|default:'No notes yet.' }}">View Notes</button>
+          </div>
+        </li>
+        {% empty %}
+        <p>No sessions found.</p>
+        {% endfor %}
+      </ul>
+    </div>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+ <script>
+  // --- Search filter ---
+  const searchInput = document.getElementById('sessionSearch');
+  searchInput.addEventListener('input', () => {
+    const filter = searchInput.value.toLowerCase();
+    document.querySelectorAll('#sessionList .me-card').forEach(card => {
+      const name = card.dataset.name.toLowerCase();
+      card.style.display = name.includes(filter) ? '' : 'none';
+    });
+  });
+
+  // --- SweetAlert for notes ---
+  document.querySelectorAll('.view-notes').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const notes = btn.dataset.notes;
+      Swal.fire({
+        title: 'Session Notes',
+        html: `<p>${notes}</p>`,
+        icon: 'info',
+        confirmButtonText: 'Close'
+      });
+    });
+  });
+</script>
+</body>
+</html>

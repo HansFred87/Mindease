@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Past Sessions | MindEase</title>
+  <link rel="stylesheet" href="{% static 'core/css/past_sessions.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="logo"><img href="{% url 'user_dashboard' %}" src="{% static 'accounts/images/logo.png' %}" alt="Logo" class="logo-image" style="width: 30px; height: 30px;"> MindEase</div>
+  </header>
+
+  <div class="back-section">
+    <a href="{% url 'user_dashboard' %}" class="back-link">← Back to Dashboard</a>
+  </div>
+
+  <main class="main-container">
+    <h1 class="page-title">Past Sessions</h1>
+    <p class="subtitle">Review your session history and progress</p>
+
+    <div class="sessions-container">
+      {% for session in sessions %}
+      <div class="session-card glass-card">
+        <div class="session-top">
+          <div class="left">
+            <div class="avatar">{{ session.counselor.full_name|slice:":1" }}</div>
+            <div>
+              <h3>{{ session.counselor.full_name }}</h3>
+              <span class="tag green">Counseling</span>
+            </div>
+          </div>
+          <div class="right">
+            <button class="btn-outline view-notes" data-notes="{{ session.counselor_notes|default:'No notes yet.' }}">View Notes</button>
+          </div>
+        </div>
+
+        <div class="meta">
+          <p>📅 {{ session.date|date:"M d, Y" }}</p>
+          <p>⏰ {{ session.time|time:"h:i A" }} • 50 min</p>
+          <p>💬 Video Session</p>
+        </div>
+
+        <div class="notes" style="display:none;">
+          <p>{{ session.counselor_notes|default:'No notes yet.' }}</p>
+        </div>
+
+        <!-- Status badge -->
+        <div class="rating">
+          {% if session.status == "completed" %}
+            <span class="badge badge-completed">Completed</span>
+          {% elif session.status == "started" %}
+            <span class="badge badge-started">In Progress</span>
+          {% else %}
+            <span class="badge badge-pending">Pending</span>
+          {% endif %}
+          <!-- Default rating -->
+          Your rating: ⭐⭐⭐⭐⭐
+        </div>
+      </div>
+      {% empty %}
+      <p>No past sessions yet.</p>
+      {% endfor %}
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <script>
+  // SweetAlert for notes
+  document.querySelectorAll('.view-notes').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const notes = btn.dataset.notes;
+      Swal.fire({
+        title: 'Session Notes',
+        html: `<p>${notes}</p>`,
+        icon: 'info',
+        confirmButtonText: 'Close'
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

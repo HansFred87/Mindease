@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session with {{ appointment.counselor.full_name }}</title>
+    <link rel="stylesheet" href="{% static 'core/css/session.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="session-container">
+        <h1>Session with {{ appointment.counselor.full_name }}</h1>
+        <p>Date: {{ appointment.date|date:"l, F j" }} | Time: {{ appointment.time|time:"g:i A" }}</p>
+
+        <!-- Video Chat -->
+        <div class="video-container">
+            <video id="localVideo" autoplay muted></video>
+            <video id="remoteVideo" autoplay></video>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-container">
+            <div id="chatMessages"></div>
+            <input type="text" id="chatInput" placeholder="Type a message..." />
+            <button onclick="sendChat()">Send</button>
+        </div>
+    </div>
+
+<script>
+Swal.fire({
+    title: 'Joining Session...',
+    text: 'Connecting you to your counselor...',
+    icon: 'info',
+    timer: 2000,
+    showConfirmButton: false
+});
+
+// --- WebSocket Chat ---
+const appointmentId = "{{ appointment.id }}";
+const userName = "{{ user.full_name }}";
+
+const chatSocket = new WebSocket(
+    `ws://${window.location.host}/ws/session/${appointmentId}/`
+);
+
+chatSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const chatMessages = document.getElementById('chatMessages');
+    const msgEl = document.createElement('div');
+    msgEl.textContent = `${data.sender}: ${data.message}`;
+    chatMessages.appendChild(msgEl);
+};
+
+function sendChat() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if(!message) return;
+
+    chatSocket.send(JSON.stringify({
+        'message': message,
+        'sender': userName
+    }));
+
+    input.value = '';
+}
+
+// --- WebRTC Setup ---
+let localStream;
+let remoteStream;
+let pc = new RTCPeerConnection();
+
+// Show remote video
+pc.ontrack = (event) => {
+    document.getElementById('remoteVideo').srcObject = event.streams[0];
+};
+
+// Start local video and add tracks to peer connection
+async function startLocalVideo() {
+    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.getElementById('localVideo').srcObject = localStream;
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+}
+
+startLocalVideo();
+
+// Optional: handle ICE candidates
+pc.onicecandidate = (event) => {
+    if(event.candidate) {
+        // Send candidate to signaling server
+        console.log("New ICE candidate:", event.candidate);
+    }
+};
+
+// Placeholder: signaling logic (WebSocket) to exchange offer/answer
+// You need a Django Channels consumer to handle signaling
+</script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase - User Dashboard</title>
+    {% load static %}  <!-- Loads Django's static files template tag for CSS/JS paths -->
+    <link rel="stylesheet" href="{% static 'core/css/dashboard.css' %}">  <!-- Links to custom CSS file for styling -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">  <!-- Loads Google Fonts for typography -->
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Header Section -->
+        <header class="header">
+            
+            <div class="logo"><img src="{% static 'accounts/images/logo.png' %}" alt="Logo" class="logo-image" style="width: 30px; height: 30px;"><span> MindEase</span></div>  <!-- App logo with emoji -->
+            <div class="user-menu">
+                <span class="username">
+                    Hi, {{ user.full_name|default:user.get_username|title }}!  <!-- Displays user's first name or username, capitalized -->
+                </span>
+                <a href="{% url 'logout' %}" class="logout-btn">Logout</a>  <!-- Logout link using Django URL resolver -->
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="welcome-section">
+                <h1>Welcome back, {{ user.full_name|default:user.get_username|title }}!</h1>  <!-- Personalized welcome message -->
+                <p>Continue your wellness journey</p>
+            </section>
+
+            <div class="content-grid">
+                <!-- Left Section -->
+                <div class="left-section">
+
+                     <div class="card sessions-card">
+                        <h2>📌 Today's Appointments</h2>
+                       {% for session in todays_appointments %}
+                            {% if session.status != "completed" %}
+                                <div class="session-item" id="session-{{ session.id }}">
+                                    <div>
+                                        <p class="session-name">{{ session.counselor.full_name }}</p>
+                                        <p class="session-time">{{ session.time|time:"g:i A" }}</p>
+                                    </div>
+
+                                    {% if session.status == "started" and session.google_meet_link %}
+                                        <a href="{{ session.google_meet_link }}" target="_blank" class="join-btn">Join Session</a>
+                                    {% endif %}
+                                    <button class="logout-btn" onclick="cancelBooking('{{ session.id }}')">Cancel</button>
+                                </div>
+                            {% else %}
+                                <p class="no-session">No upcoming appointments today. You can check your past sessions.</p>
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="card sessions-card">
+                        <h2>My Upcoming Appointments</h2>
+                        {% if upcoming_sessions %}
+                            {% for session in upcoming_sessions %}
+                                <div class="session-item" id="session-{{ session.id }}">
+                                    <div>
+                                        <p class="session-name">{{ session.counselor.full_name }}</p>
+                                        <p class="session-time">{{ session.date|date:"l, F j" }} at {{ session.time|time:"g:i A" }}</p>
+                                    </div>
+                                    <button class="logout-btn" onclick="cancelBooking('{{ session.id }}')">Cancel</button>
+                                </div>
+
+                            {% endfor %}
+                        {% else %}
+                            <p class="no-session">No upcoming bookings yet.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="card quick-actions">
+                        <h2>⚡ Quick Actions</h2>
+                        <div class="actions-grid">
+                            <button id="openAiChatBtn" class="action-btn view-badges-btn chat-launcher" type="button" onclick="openAIChatFull()">  <!-- Button to open AI chat; calls JS function -->
+                                <span class="icon">🤖</span> Chat With AI Companion
+                            </button>
+                            <a href="{% url 'counselors_page' %}" class="action-btn view-badges-btn">📅 Book Session</a>  <!-- Link to book a session -->
+                            <a href="{% url 'past_sessions' %}" class="action-btn view-badges-btn">📖 Past Sessions</a>  <!-- Link to view past sessions -->
+                            <a href="{% url 'get_support' %}" class="action-btn view-badges-btn">🏅 Get Support</a>  <!-- Link to view badges (check if URL matches label) -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="right-section">
+                    <div class="card wellness-tips">
+                        <h2>💡 Wellness Tips</h2>
+                        {% if wellness_tips %}
+                            <ul>
+                                {% for tip in wellness_tips %}
+                                    <li>
+                                        <strong>{{ tip.title }}</strong><br>
+                                        {{ tip.description }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>No wellness tips available at the moment.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Loads Django's static files template tag for CSS/JS paths -->
+    <script src="{% static 'core/js/dashboard.js' %}"></script>  <!-- Loads custom JS file for dashboard functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Pass user name to AI widget -->
+    <script>
+        window.AI_USER_NAME = "{{ user.full_name|default:user.get_username|escapejs }}";
+    </script>
+
+    {% if user.is_authenticated %}
+        {% include 'ai_companion/widget.html' %}
+    {% endif %}  <!-- Includes the AI companion widget template (assumes it loads JS for chat functions) -->
+    
+    <script>
+        // Opens the AI widget and then switches it to fullscreen mode.
+        function openAIChatFull() {
+            // If the widget JS is loaded, it exposes these functions.
+            if (typeof window.toggleAIChat === 'function') {  // Checks if the toggle function exists
+                // Open the widget (compact)
+                window.toggleAIChat();  // Calls function to open the chat widget
+
+                // Give the widget a moment to open, then request fullscreen mode.
+                // Adjust timeout if your environment is slow to render (150-300ms is OK).
+                setTimeout(function() {  // Delays fullscreen toggle to ensure widget is ready
+                    if (typeof window.toggleFullscreen === 'function') {  // Checks if fullscreen function exists
+                        window.toggleFullscreen();  // Calls function to make chat fullscreen
+                    }
+                }, 200);  // 200ms delay; consider increasing for reliability
+
+            } else {
+                // Fallback: go to the chat page if the widget JS didn't load.
+                window.location.href = "{% url 'ai_companion:chat' %}";  // Redirects to chat page as backup
+            }
+        }
+
+        // Optional: keyboard shortcut to open chat (Ctrl+Shift+M)
+        document.addEventListener('keydown', function(e) {  // Listens for key presses
+            if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'm') {  // Checks for Ctrl+Shift+M
+                openAIChatFull();  // Opens the chat if shortcut is pressed
+            }
+        });
+    </script>
+
+    <script>
+        function cancelBooking(appointmentId) {
+    appointmentId = parseInt(appointmentId);
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to cancel this booking?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/core/cancel-booking/${appointmentId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Accept": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const elem = document.getElementById(`session-${appointmentId}`);
+                    if (elem) elem.remove();
+
+                    Swal.fire(
+                        'Cancelled!',
+                        'Your booking has been cancelled.',
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Error!',
+                        data.message || 'Failed to cancel booking.',
+                        'error'
+                    );
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire(
+                    'Error!',
+                    'Something went wrong.',
+                    'error'
+                );
+            });
+        }
+    });
+}
+
+    </script>
+
+   <!--script>
+    function joinSession(appointmentId){
+        Swal.fire({
+            title: 'Joining Session...',
+            text: 'You will be redirected.',
+            icon: 'info',
+            timer: 1500,
+            showConfirmButton: false
+        });
+        
+        setTimeout(() => {
+            window.location.href = "{% url 'join_session' 0 %}".replace('0', appointmentId);
+        }, 1500);
+    }
+    </script-->
+
+    <script>
+        const patientUserId = "{{ request.user.id }}";
+        const socket = new WebSocket(
+            `ws://${window.location.host}/ws/session/notifications/${patientUserId}/`
+        );
+
+        socket.onopen = function() {
+            console.log("WebSocket connected for patient:", patientUserId);
+        };
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === "session_started") {
+                Swal.fire({
+                    title: "Your Counseling Session Has Started!",
+                    text: `Counselor ${data.counselor_name} is ready for you.`,
+                    icon: "info"
+                }).then(() => {
+                    window.location.href = `/core/join-session/${data.appointment_id}/`;
+                });
+            }
+        };
+
+        socket.onerror = function(error) {
+            console.error("WebSocket Error:", error);
+        };
+
+        socket.onclose = function() {
+            console.log("WebSocket disconnected");
+        };
+
+    </script>
+
+    <script>
+        function checkStartedSessions() {
+    fetch('/core/check-session-status/')  // endpoint returns appointments with status=='started'
+        .then(res => res.json())
+        .then(data => {
+            data.appointments.forEach(app => {
+                if (app.status === 'started') {
+                    // Show SweetAlert and redirect automatically
+                    Swal.fire({
+                        title: "Your session has started!",
+                        text: "Click OK to join Google Meet.",
+                        icon: "info"
+                    }).then(() => {
+                        window.location.href = app.google_meet_link;
+                    });
+                }
+            });
+        });
+}
+
+// Poll every 15 seconds
+setInterval(checkStartedSessions, 15000);
+
+    </script>
+
+
+</body>
+</html>

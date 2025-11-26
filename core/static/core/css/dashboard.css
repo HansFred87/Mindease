@@ -1,0 +1,402 @@
+/* ==========================================
+   MindEase User Dashboard — Fully Responsive
+   ========================================== */
+
+/* Base Reset */
+* {
+  box-sizing: border-box;  /* Ensures padding/borders are included in element width/height */
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;  /* Sets default font to Inter from Google Fonts */
+}
+
+/* Background and Body Setup */
+body {
+  background: linear-gradient(180deg, #F7FBFD 0%, #F3F9FA 60%, #eef7ff 100%);  /* Subtle gradient background */
+  color: #333;  /* Default text color */
+  padding: 0 20px 40px;  /* Adds padding around the body */
+  position: relative;
+  min-height: 100vh;  /* Ensures body takes full viewport height */
+  overflow-x: hidden;  /* Prevents horizontal scrolling */
+}
+
+/* Background blobs (decorative form-style design) */
+body::before,
+body::after {
+  content: "";  /* Creates pseudo-elements for decorative blobs */
+  position: fixed;
+  pointer-events: none;  /* Blobs don't interfere with clicks */
+  z-index: 0;  /* Places behind content */
+  filter: blur(50px);  /* Blurs the blobs for a soft effect */
+  opacity: 0.65;
+  transform: translateZ(0);  /* Forces hardware acceleration */
+}
+
+body::before {
+  left: -120px;
+  top: -100px;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle at 28% 32%, rgba(110,231,183,0.78), rgba(59,130,246,0.45) 45%, rgba(99,102,241,0.14) 75%);  /* Green-blue gradient blob */
+  border-radius: 50%;  /* Makes it circular */
+}
+
+body::after {
+  right: -140px;
+  top: 30px;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle at 70% 30%, rgba(59,130,246,0.66), rgba(110,231,183,0.28) 45%, rgba(99,102,241,0.10) 75%);  /* Blue-green gradient blob */
+  border-radius: 50%;
+}
+
+/* Dashboard Container */
+.dashboard {
+  position: relative;
+  z-index: 5;  /* Places above the background blobs */
+  width: 100%;
+  max-width: 1100px;  /* Limits max width for large screens */
+  margin: 0 auto;  /* Centers the dashboard */
+  -webkit-backdrop-filter: blur(2px);  /* Adds a subtle blur effect (with vendor prefix) */
+  backdrop-filter: blur(2px);
+}
+
+/* ======================
+   HEADER SECTION
+   ====================== */
+.header {
+  display: flex;
+  justify-content: space-between;  /* Spaces logo and user menu apart */
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid #e3eaf2;  /* Thin border under header */
+  margin-bottom: 20px;
+}
+
+.logo {
+  font-weight: 700;  /* Bold font */
+  font-size: 22px;
+  color: #3a8ef6;  /* Blue color for logo */
+}
+
+.header-right {  /* Note: This class doesn't match HTML (.user-menu); update to match */
+  display: flex;
+  align-items: center;
+  gap: 16px;  /* Space between username and logout */
+}
+
+.user-name {  /* Note: This class doesn't match HTML (.username); update to match */
+  font-weight: 500;
+  color: #444;
+}
+
+.logout-btn {
+  background: #fef2f2;  /* Light red background */
+  color: #dc2626;  /* Red text */
+  border: 1px solid #fca5a5;  /* Red border */
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  transition: 0.2s ease;  /* Smooth hover transition */
+}
+
+.logout-btn:hover {
+  background: #fee2e2;  /* Darker red on hover */
+}
+
+/* ======================
+   MAIN CONTENT
+   ====================== */
+.main-content {
+  max-width: 1100px;
+  margin: 0 auto;  /* Centers content */
+}
+
+/* Welcome Section */
+.welcome-section {
+  margin-bottom: 24px;
+}
+
+.welcome-section h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.welcome-section p {
+  color: #666;  /* Gray text for subtitle */
+}
+
+/* ======================
+   CONTENT GRID
+   ====================== */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;  /* Left section wider than right */
+  gap: 24px;  /* Space between columns */
+  align-items: start;  /* Aligns items to top */
+}
+
+/* Card Styling */
+.card {
+  background: rgba(255, 255, 255, 0.98);  /* Semi-transparent white background */
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(20, 40, 70, 0.06);  /* Subtle shadow */
+  margin-bottom: 20px;
+  border: 1px solid rgba(20, 40, 70, 0.03);  /* Thin border */
+}
+
+.card h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+/* ======================
+   SESSIONS
+   ====================== */
+.session-item {
+  display: flex;
+  justify-content: space-between;  /* Spaces session info and button */
+  align-items: center;
+  border: 1px solid #eef3f6;  /* Light border */
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  background-color: #fafcff;  /* Light blue background */
+  transition: 0.2s ease;  /* Smooth hover transition */
+}
+
+.session-item:hover {
+  background-color: #f0f6ff;  /* Darker blue on hover */
+}
+
+.session-name {
+  font-weight: 600;  /* Bold name */
+}
+
+.session-time {
+  font-size: 13px;
+  color: #666;  /* Gray text */
+}
+
+/* ======================
+   BUTTONS
+   ====================== */
+
+/* Gradient Button (Reusable) */
+.btn-gradient {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #6EE7B7, #3B82F6);  /* Green-blue gradient */
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.14);  /* Shadow for depth */
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;  /* Smooth animations */
+  text-decoration: none;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);  /* Lifts button on hover */
+  background: linear-gradient(90deg, #3B82F6, #6366F1);  /* Shifts gradient */
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.18);  /* Deeper shadow */
+}
+
+/* Join Button */
+.join-btn {
+  background: linear-gradient(90deg, #6EE7B7, #3B82F6);  /* Same gradient as above */
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  border: none;
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.14);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.join-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #3B82F6, #6366F1);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.18);
+}
+
+/* ======================
+   QUICK ACTIONS
+   ====================== */
+.quick-actions .actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* Two columns for actions */
+  gap: 12px;  /* Space between buttons */
+}
+
+.action-btn {
+  border: none;
+  background: #f8fafc;  /* Light gray background */
+  padding: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);  /* Subtle shadow */
+  transition: 0.2s ease;
+  text-align: center;
+}
+
+.action-btn:hover {
+  background: #eef5ff;  /* Light blue on hover */
+}
+
+.action-btn.view-badges-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;  /* Full width */
+  height: 48px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #ffffff;
+  background: linear-gradient(90deg, #6EE7B7, #3B82F6);  /* Gradient background */
+  border: none;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(59, 130, 246, 0.14);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;  /* Smooth transitions */
+}
+
+.action-btn.view-badges-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #3B82F6, #6366F1);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.18);
+}
+
+/* Prevent underline */
+.quick-actions a {
+  text-decoration: none;  /* Removes underlines from links */
+}
+
+/* ======================
+   RESPONSIVE DESIGN FIXES
+   ====================== */
+
+/* Medium Screens (Tablets) */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1.4fr 1fr;  /* Slightly adjusts column ratio */
+    gap: 18px;  /* Smaller gap */
+  }
+
+  .header {
+    flex-wrap: wrap;  /* Allows wrapping on smaller screens */
+    gap: 10px;
+  }
+
+  .logo {
+    font-size: 20px;  /* Smaller logo */
+  }
+
+  .welcome-section h1 {
+    font-size: 24px;  /* Smaller heading */
+  }
+
+  .card {
+    padding: 20px;  /* Reduced padding */
+  }
+
+  .action-btn {
+    font-size: 14px;
+    padding: 14px;  /* Smaller buttons */
+  }
+}
+
+/* Small Screens (Mobile) */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;  /* Stacks header vertically */
+    align-items: center;
+    gap: 8px;
+    text-align: center;  /* Centers text */
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .user-name {
+    font-size: 14px;
+  }
+
+  .main-content {
+    text-align: center;
+  }
+
+  .welcome-section h1 {
+    font-size: 22px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;  /* Single column */
+    gap: 16px;
+  }
+
+  .card {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .quick-actions .actions-grid {
+    grid-template-columns: 1fr;  /* Single column for actions */
+  }
+
+  .action-btn.view-badges-btn {
+    font-size: 14px;
+    height: 44px;  /* Ensures touch-friendly height */
+  }
+
+  body::before {
+    width: 320px;
+    height: 320px;
+    filter: blur(36px);  /* Less blur for performance */
+    opacity: 0.55;
+  }
+
+  body::after {
+    width: 260px;
+    height: 260px;
+    filter: blur(30px);
+    opacity: 0.5;
+  }
+}
+
+/* Extra Small (Phones) */
+@media (max-width: 480px) {
+  .welcome-section h1 {
+    font-size: 20px;
+  }
+
+  .card {
+    padding: 16px;  /* Minimal padding */
+  }
+
+  .action-btn {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .badge {
+    font-size: 11px;  /* Smaller badges */
+  }
+
+  .header {
+    gap: 6px;  /* Tighter spacing */
+  }
+}
+

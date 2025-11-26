@@ -1,0 +1,321 @@
+/* =====================================================
+   MindEase Manage Availability Page (Glass/Gradient UI)
+   Polished Version with Fixed Button Designs and Accessibility
+   ===================================================== */
+
+/* Root Variables: Custom properties for consistent theming across the page */
+:root {
+  --primary-bg: radial-gradient(circle at top left, #dbefff 0%, #f4f7ff 100%);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --primary-color: #3b82f6;
+  --secondary-color: #64748b;
+  --text-color: #1e293b;
+  --hover-shadow: rgba(31, 38, 135, 0.12);
+  --btn-gradient: linear-gradient(135deg, #34d399, #3b82f6);
+  --btn-hover-gradient: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+
+/* Base Styles: Sets global background, font, and layout for the page */
+body {
+  background: var(--primary-bg);
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  margin: 0;
+  min-height: 100vh;
+}
+
+/* Navbar Styles: Defines the glass-effect navigation bar at the top */
+.navbar-glass {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+}
+
+.brand-logo {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+/* Page Container Styles: Centers and pads the main content area */
+.page-container {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 50px 20px 100px;
+}
+
+.back-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  margin-bottom: 18px;
+  display: inline-block;
+}
+
+.back-link:hover,
+.back-link:focus {
+  text-decoration: underline;
+  outline: 2px solid var(--primary-color); /* Accessibility: Visible focus ring */
+}
+
+/* Section Header Styles: Formats the page title and description */
+.section-header {
+  margin-bottom: 32px;
+}
+
+.section-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.section-header p {
+  color: var(--secondary-color);
+}
+
+/* Grid Layout Styles: Uses CSS Grid for responsive two-column layout */
+.availability-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 28px;
+}
+
+/* Glass Box Styles: Applies glassmorphism effect to containers */
+.glass-box {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.08);
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.glass-box:hover {
+  box-shadow: 0 12px 36px var(--hover-shadow);
+}
+
+/* Left Panel Styles: Layout for the main scheduling controls */
+.left-panel {
+  padding: 28px;
+}
+
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* Day Selector Styles: Customizes the dropdown for selecting days */
+.day-selector select {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: 0.25s ease;
+}
+
+.day-selector select:hover,
+.day-selector select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); /* Accessibility: Focus ring */
+}
+
+/* Add Button Styles: Defines the primary action button for adding slots */
+.btn-add {
+  background: var(--btn-gradient);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.btn-add:hover,
+.btn-add:focus {
+  background: var(--btn-hover-gradient);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+  outline: 2px solid var(--primary-color); /* Accessibility: Focus ring */
+}
+
+/* Time Slot List Styles: Container for the list of time slots */
+.time-slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Time Slot Styles: Individual slot cards with hover effects */
+.time-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  transition: all 0.2s ease;
+}
+
+.time-slot:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+}
+
+.slot-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.slot-status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: 0.2px;
+}
+
+.status-available {
+  background: rgba(167, 139, 250, 0.15);
+  color: #7c3aed;
+}
+
+.status-booked {
+  background: rgba(52, 211, 153, 0.15);
+  color: #059669;
+}
+
+.status-break {
+  background: rgba(251, 191, 36, 0.15);
+  color: #b45309;
+}
+
+/* Remove Button Styles: Button for deleting slots */
+.remove-btn {
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--secondary-color);
+  font-size: 13px;
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.remove-btn:hover,
+.remove-btn:focus {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(254, 226, 226, 0.7);
+  outline: 2px solid #ef4444; /* Accessibility: Focus ring */
+}
+
+/* Right Panel Styles: Layout for summary and settings */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Summary Box Styles: Displays weekly slot summary */
+.summary-box {
+  padding: 22px 26px;
+}
+
+.summary-box h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.summary-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary-box li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  padding: 5px 0;
+  color: #475569;
+}
+
+.summary-box li span {
+  background: rgba(241, 245, 249, 0.8);
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #475569;
+}
+
+/* Quick Settings Styles: Container for bulk action buttons */
+.quick-settings {
+  padding: 22px 26px;
+}
+
+.quick-settings h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+/* Outline Button Styles: Uniform styling for quick settings buttons */
+.btn-outline {
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.btn-outline:hover,
+.btn-outline:focus {
+  border-color: var(--primary-color);
+  color: #2563eb;
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(147,197,253,0.12));
+  transform: translateY(-1px);
+  outline: 2px solid var(--primary-color); /* Accessibility: Focus ring */
+}
+
+/* Responsive Styles: Adjusts layout for smaller screens */
+@media (max-width: 900px) {
+  .availability-grid {
+    grid-template-columns: 1fr; /* Single column on tablets/mobile */
+  }
+
+  .btn-add {
+    width: 100%;
+    justify-content: center;
+  }
+}

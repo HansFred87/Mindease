@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us — MindEase</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'core/css/get_support.css' %}">
+</head>
+<body>
+  <!-- Header: logo at left (exact markup you provided) -->
+  <header class="header">
+    <a href="{% url 'user_dashboard' %}" class="logo-link" title="MindEase">
+      <div class="logo">🧠 MindEase</div>
+    </a>
+  </header>
+
+  <!-- Main content container (controls left alignment of back link) -->
+  <div class="contact-container">
+
+    <!-- Back link just below header and aligned to the container -->
+    <div class="back-row">
+      <a href="{% url 'user_dashboard' %}" class="back-to-dashboard" aria-label="Back to Dashboard">
+        <span class="back-arrow">←</span>
+        <span class="back-text">Back to Dashboard</span>
+      </a>
+    </div>
+
+    <!-- Page header -->
+    <div class="page-header">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-subtitle">Have questions? We'd love to hear from you</p>
+    </div>
+
+    <!-- Content grid -->
+    <div class="contact-grid">
+      <!-- Info card -->
+      <div class="info-card">
+        <h2>Get in Touch</h2>
+        <p>Fill out the form and our team will get back to you within 24 hours.</p>
+
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <span>support@mindease.com</span>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <span>1-800-MINDEASE</span>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <span>123 Wellness Street, San Francisco, CA 94102</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form card -->
+      <div class="form-card">
+        <form method="POST" action="">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Send Message</button>
+
+          {% if success %}
+            <p class="success-msg">Thank you, {{ name }}! Your message has been sent.</p>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="{% static 'core/js/get_support.js' %}"></script>
+</body>
+</html>

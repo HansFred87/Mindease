@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindEase - Your Mental Health Journey Starts Here</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="{% static 'accounts/css/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+        <div class="floating-shape shape-4"></div>
+    </div>
+
+    <!--nav class="navbar">
+        <div img src="{% static 'images/logo.png' %}" class="nav-brand">MindEase</div>
+    </nav-->
+
+    <nav class="navbar">
+        <a href="{% url 'home' %}" class="nav-brand">
+            <img src="{% static 'accounts/images/logo.png' %}" alt="Logo" class="logo-image">
+            MindEase
+        </a>
+    </nav>
+
+    <div class="main-container">
+        <div class="hero-section loading">
+            <h1 class="hero-title">Your Mental Health Journey Starts Here</h1>
+            <p class="hero-subtitle">Professional Care • AI Support • Wellness Tools</p>
+            <p class="hero-description">
+                Connect with certified counselors, chat with our AI companion, and access gamified wellness tools 
+                in a secure, integrated platform designed for your mental well-being.
+            </p>
+
+            <div class="cta-container">
+                <button data-url="{% url 'form' %}?action=register" onclick="goToRegister(this)" class="cta-btn btn-primary">
+    <span>✨</span> Join MindEase
+</button>
+<button data-url="{% url 'form' %}?action=login" onclick="goToLogin(this)" class="cta-btn btn-secondary">
+    <span>🔑</span> Sign In
+</button>
+            </div>
+
+            <div class="features-preview">
+                <div class="feature-card" onclick="openModal('ai')">
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">AI Companion</h3>
+                    <p class="feature-desc">24/7 mental health support with intelligent conversations and coping strategies</p>
+                </div>
+                <div class="feature-card" onclick="openModal('counselor')">
+                    <span class="feature-icon">👨‍⚕️</span>
+                    <h3 class="feature-title">Expert Counselors</h3>
+                    <p class="feature-desc">Connect with verified mental health professionals through secure video consultations</p>
+                </div>
+                <div class="feature-card" onclick="openModal('scheduel')">
+                    <span class="feature-icon"> 📅 </span>
+                    <h3 class="feature-title">Easy Scheduling</h3>
+                    <p class="feature-desc"> Effortless scheduling and reminders for your wellness journey</p>
+                </div>
+                <div class="feature-card" onclick="openModal('games')">
+                    <span class="feature-icon"> 📅 </span>
+                    <h3 class="feature-title">Easy Scheduling</h3>
+                    <p class="feature-desc"> Effortless scheduling and reminders for your wellness journey</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 MindEase - Integrated Mental Health Support Platform. Empowering minds, transforming lives.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="featureModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <span class="modal-icon" id="modalIcon"></span>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-description" id="modalDescription"></p>
+            <ul class="modal-features" id="modalFeatures"></ul>
+        </div>
+    </div>
+
+    <script src="{% static 'accounts/js/home.js' %}"></script>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Counselor Profile | MindEase</title>
+  <link rel="stylesheet" href="{% static 'core/css/counselor_profile_update.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <header class="header">
+    <a href="{% url 'counselor_dashboard' %}" class="logo-link">
+      <div class="logo">🧠 MindEase</div>
+    </a>
+  </header>
+
+  <main class="container">
+    <div class="back-row">
+      <a href="{% url 'counselor_dashboard' %}" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <section class="page-header">
+      <h1>Update Profile</h1>
+      <p>Manage your professional information</p>
+    </section>
+
+    <div class="profile-grid">
+      <!-- LEFT FORM -->
+      <form id="profile-form" method="POST" class="profile-form">
+        {% csrf_token %}
+
+        <center>
+          <div class="profile-top-center">
+            <div class="avatar">
+              <div class="avatar-circle">{{ user.full_name|default:"?"|slice:":1" }}</div>
+            </div>
+          </div>
+        </center>
+        
+
+        <div class="form-group">
+          <label>Full Name</label>
+          <input name="fullname" value="{{ user.full_name|default:'' }}">
+        </div><br>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input name="email" value="{{ user.email|default:'' }}">
+        </div><br>
+
+        <div class="form-group">
+          <label>Years of Experience</label>
+          <input name="experience" value="{{ user.years_experience|default:'' }}">
+        </div><br>
+
+        <div class="form-group">
+          <label>License No.</label>
+          <input name="license_number" value="{{ user.license_number|default:'' }}">
+        </div><br>
+
+        <div class="form-group">
+          <label>Education</label>
+          <input name="institution_name" value="{{ user.institution_name|default:'' }}">
+        </div><br>
+
+         <div class="form-group">
+          <label>Professional Bio</label>
+          <textarea name="bio">{{ user.bio|default:'' }}</textarea>
+        </div><br>
+
+
+        <div class="form-group">
+        <div class="input-group">
+          <label class="input-label">Specializations</label>
+
+          <!-- Dropdown toggle -->
+          <div class="specialization-toggle" onclick="toggleSpecializationOptions()">
+            <span id="specialization-text">Select Specializations</span>
+            <span id="specialization-icon">▼</span>
+          </div>
+
+          <!-- Options container -->
+          <div class="specialization-options" id="specializationOptions">
+            {% for spec in specializations %}
+            <div class="specialization-option">
+              <input type="checkbox" id="spec_{{ forloop.counter }}" name="specializations" value="{{ spec }}"
+                {% if spec in user.get_specializations_list %}checked{% endif %}
+                {% if spec == 'Other Mild Concerns' %} onchange="toggleOtherConcernsInput(this)" {% endif %}>
+              <label for="spec_{{ forloop.counter }}">{{ spec }}</label>
+            </div>
+            {% endfor %}
+
+            <!-- Other Mild Concerns input -->
+            <div id="other-concerns-input-container" class="{% if 'Other Mild Concerns' in user.get_specializations_list %}show{% else %}hide{% endif %}">
+              <input type="text" name="other_concerns" placeholder="Describe other concerns">
+            </div>
+          </div>
+        </div>
+        </div><br>
+        <button type="submit" class="save-btn">💾 Save Changes</button>
+      </form>
+
+      <!-- RIGHT SIDE -->
+      <div class="profile-side">
+        <div class="card profile-status">
+          <h3 class="card-title">👤 Profile Status</h3>
+          <div class="stats">
+            <p>Profile Views <span>245</span></p>
+            <p>Rating <span>4.9 ⭐</span></p>
+            <p>Reviews <span>89</span></p>
+          </div>
+        </div>
+
+        <div class="card credentials">
+          <h3 class="card-title">📜 Credentials</h3>
+            <button type="button" class="cred-btn" id="view-id-btn">View ID Licenses</button>
+            <button type="button" class="cred-btn" id="view-cert-btn">View Certificates</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+document.getElementById("profile-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  let formData = new FormData(this);
+
+  fetch("{% url 'counselor_profile' %}", {
+    method: "POST",
+    headers: { "X-Requested-With": "XMLHttpRequest" },
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "success") {
+      Swal.fire({
+        title: "Profile Updated!",
+        icon: "success",
+        text: "Your changes have been saved.",
+      }).then(() => {
+        // Update form fields with latest values
+        document.querySelector('input[name="fullname"]').value = data.full_name;
+        document.querySelector('input[name="email"]').value = data.email;
+        document.querySelector('input[name="experience"]').value = data.years_experience || '';
+        document.querySelector('input[name="specialization"]').value = data.specializations.join(', ');
+        document.querySelector('textarea[name="bio"]').value = data.bio;
+      });
+    } else {
+      Swal.fire({
+        title: "Error!",
+        icon: "error",
+        text: "Failed to update profile.",
+      });
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    Swal.fire({
+      title: "Error!",
+      icon: "error",
+      text: "Something went wrong.",
+    });
+  });
+});
+</script>
+
+<script>
+document.getElementById("view-id-btn").addEventListener("click", function() {
+  Swal.fire({
+    title: 'Professional ID',
+    imageUrl: "{% if user.professional_id %}{{ user.professional_id.url }}{% else %}{% static 'core/images/no-image.png' %}{% endif %}",
+    imageAlt: 'Professional ID',
+    imageWidth: 400,
+    imageHeight: 300,
+    showCloseButton: true,
+  });
+});
+
+document.getElementById("view-cert-btn").addEventListener("click", function() {
+  Swal.fire({
+    title: 'Degree Certificate',
+    imageUrl: "{% if user.degree_certificate %}{{ user.degree_certificate.url }}{% else %}{% static 'core/images/no-image.png' %}{% endif %}",
+    imageAlt: 'Degree Certificate',
+    imageWidth: 400,
+    imageHeight: 300,
+    showCloseButton: true,
+  });
+});
+</script>
+
+<script>
+function toggleSpecializationOptions() {
+  const container = document.getElementById("specializationOptions");
+  container.style.display = container.style.display === "flex" ? "none" : "flex";
+}
+
+function toggleOtherConcernsInput(el) {
+  const otherInput = document.getElementById("other-concerns-input-container");
+  otherInput.style.display = el.checked ? "block" : "none";
+}
+
+</script>
+
+
+</body>
+</html>

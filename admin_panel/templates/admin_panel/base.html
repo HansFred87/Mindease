@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin_panel/css/admin.css' %}">
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block header %}
+<div class="custom-admin-navbar">
+    <div class="navbar-brand">
+        <a href="{% url 'admin:index' %}">
+            <span class="admin-logo"><img src="{% static 'accounts/images/logo.png' %}" alt="Logo" class="logo-image" style="width: 30px; height: 30px;">  MindEase Administration</span>
+        </a>
+    </div>
+
+    <div class="navbar-user">
+        {% if user.is_authenticated %}
+            <span class="welcome-msg">Welcome, <strong>{{ user.full_name.split.0|title }}!</strong></span>
+            <form method="post" action="{% url 'custom_admin:logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Log out</button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+<!-- 🔥 This line removes ALL Django messages -->
+{% block messages %}{% endblock %}
+
+<!-- Override Django's default sidebar -->
+{% block nav-sidebar %}
+    {% include 'admin_panel/admin_custom_sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+{% block content_title %}{% endblock %}
+{% endblock %}
+
+{% block footer %}
+<div id="footer" class="admin-footer">
+    <p>2024 MindEase - Integrated Mental Health Support Platform. Empowering minds, transforming lives.</p>
+</div>
+{% if user.is_authenticated %}
+    {% include 'ai_companion/widget.html' %}
+{% endif %}
+{% endblock %}

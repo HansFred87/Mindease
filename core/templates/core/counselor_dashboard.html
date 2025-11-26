@@ -1,0 +1,325 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MindEase - Counselor Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'core/css/counselordashboard.css' %}">
+</head>
+
+<body>
+  <div class="dashboard">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">🧠 MindEase</div>
+      <div class="user-menu">
+        <span class="username">
+          Hi, {{ user.full_name|default:user.get_username|title }}!
+        </span>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- WELCOME SECTION -->
+      <section class="welcome-section">
+        <h1>Welcome back, {{ user.full_name|default:user.get_username|title }}!</h1>
+        <p>Here’s what’s happening today 👇</p>
+      </section>
+
+      <div class="dashboard-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-column">
+
+          <!-- TODAY'S SCHEDULE -->
+          <div class="card">
+            <div class="card-header">
+              <h2>Today's Schedule</h2>
+              <a href="{% url 'manage_availability' %}" class="view-calendar-btn">📅 View Calendar</a>
+            </div>
+
+            {% if today_appointments %}
+              {% for appt in today_appointments %}
+              <div class="session">
+                <div class="avatar">
+                  {{ appt.patient.full_name|first }}
+                </div>
+
+                <div class="details">
+                  <p class="name">{{ appt.patient.full_name }}</p>
+                  <p class="info">{{ appt.time|time:"P" }} – 
+                    {{ appt.patient.get_reason_display|default:"Counseling" }}
+                  </p>
+                </div>
+
+                <span class="status upcoming">{{ appt.status }}</span>
+
+             <!--button type="button" class="join-btn" onclick="startSession('{{ appt.id }}')">
+                Start Session
+              </button-->
+             {% if appt.status == "Pending" %}
+                 <button class="join-btn" onclick="startSession('{{ appt.id }}')">Start Session</button>
+
+            {% elif appt.status == "started" %}
+                <button class="logout-btn" onclick="endSession('{{ appt.id }}')">End Session</button>
+
+            {% elif appt.status == "completed" %}
+                <span class="tag-completed">Completed</span>
+            {% endif %}
+
+
+
+              </div>
+              {% endfor %}
+            {% else %}
+              <p>No appointments today.</p>
+            {% endif %}
+          </div>
+
+          <!-- UPCOMING APPOINTMENTS -->
+          <div class="card">
+            <h2>Upcoming Appointments</h2>
+            {% if upcoming_appointments %}
+              {% for appt in upcoming_appointments %}
+              <div class="session">
+                <div class="avatar">
+                  {{ appt.patient.full_name|first }}
+                </div>
+
+                <div class="details">
+                  <p class="name">{{ appt.patient.full_name }}</p>
+                  <p class="info">
+                    {{ appt.date|date:"M d" }} – {{ appt.time|time:"P" }}
+                  </p>
+                </div>
+
+                <span class="tag">
+                  {{ appt.patient.get_reason_display|default:"Counseling" }}
+                </span>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p>No upcoming appointments.</p>
+            {% endif %}
+          </div>
+
+          <!-- THIS WEEK'S SCHEDULE -->
+          <div class="card">
+            <h2>This Week's Schedule</h2>
+
+            {% for day, data in weekly_progress.items %}
+            <div class="week-row">
+              <span>{{ day }}</span>
+
+              <div class="progress-bar">
+                <div class="progress-fill" data-progress="{{ data.percent }}"></div>
+              </div>
+
+              <span>{{ data.count }}/{{ data.total }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="right-column">
+
+          <!-- WEEKLY SUMMARY -->
+          <div class="card small-card">
+            <h2>This Week</h2>
+            <ul class="stats">
+              <li>
+                <span>👥 Total Patients</span>
+                <strong>{{ weekly_total_patients }}</strong>
+              </li>
+              <li>
+                <span>📅 Sessions</span>
+                <strong>{{ weekly_sessions }}</strong>
+              </li>
+              <li>
+                <span>⏰ Hours</span>
+                <strong>{{ weekly_hours }}</strong>
+              </li>
+            </ul>
+          </div>
+
+          <!-- QUICK ACTIONS -->
+          <div class="card small-card">
+            <h2>Quick Actions</h2>
+
+            <a href="{% url 'manage_availability' %}" class="quick-action">
+              <span class="icon">📅</span>
+              Manage Availability
+            </a>
+
+            <a href="{% url 'patient_records' %}" class="quick-action">
+              <span class="icon">📄</span>
+              View Patient Records
+            </a>
+
+            <a href="{% url 'counselor_profile_update' %}" class="quick-action">
+              <span class="icon">⚙️</span>
+              Update Profile
+            </a>
+          </div>
+
+          <!-- FEEDBACK (PLACEHOLDER UNTIL MODEL IS READY) -->
+          <div class="card small-card">
+            <h2>Recent Feedback</h2>
+
+            {% if recent_feedback %}
+              {% for fb in recent_feedback %}
+              <div class="feedback">
+                <p class="quote">“{{ fb.text }}”</p>
+                <p class="client">⭐ {{ fb.rating }} – {{ fb.patient.full_name }}</p>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p>No feedback available yet.</p>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="{% static 'core/js/counselordashboard.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function startSession(appointmentId) {
+    Swal.fire({
+        title: 'Start Session?',
+        text: 'This will generate a Google Meet link for the client.',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Start',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/core/start-session/${appointmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Open Meet in new tab ONLY ONCE
+                    window.open(data.meet_link, '_blank');
+
+                    // Update button/status without reloading
+                    const btn = document.querySelector(`button[onclick="startSession('${appointmentId}')"]`);
+                    if (btn) {
+                        btn.textContent = 'End Session';
+                        btn.classList.remove('join-btn');
+                        btn.classList.add('logout-btn');
+                        btn.setAttribute('onclick', `endSession('${appointmentId}')`);
+                    }
+
+                    Swal.fire('Session Started!', '', 'success');
+                } else {
+                    Swal.fire('Error!', data.message || 'Something went wrong.', 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                Swal.fire('Error!', 'Something went wrong.', 'error');
+            });
+        }
+    });
+}
+
+function endSession(appointmentId) {
+    Swal.fire({
+        title: 'Session Notes',
+        input: 'textarea',
+        inputPlaceholder: 'Write your notes for the client...',
+        showCancelButton: true,
+        confirmButtonText: 'Save Notes',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            fetch(`/core/end-session/${appointmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ notes: result.value })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Saved!', 'Session notes saved successfully.', 'success').then(() => {
+                        location.reload(); // refresh to update status
+                    });
+                } else {
+                    Swal.fire('Error', data.message || 'Failed to save notes.', 'error');
+                }
+            })
+            .catch(err => console.error(err));
+        }
+    });
+}
+
+  </script>
+  <script>
+    /**function startSession(id){
+    fetch(`/core/start-session/${id}/`, {
+        method: "POST",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.success){
+            Swal.fire("Session Started", "", "success");
+            location.reload();
+        }
+    });
+} **/
+
+function endSession(id){
+    fetch(`/core/end-session/${id}/`, {
+        method: "POST",
+        headers: {"X-CSRFToken": "{{ csrf_token }}"},
+    })
+    .then(r => r.json())
+    .then(data => {
+        if(data.success){
+            Swal.fire("Session Completed!", "", "success");
+            location.reload();
+        }
+    });
+}
+
+// Helper to get CSRF cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+  </script-->
+
+    
+</body>
+</html>
